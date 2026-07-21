@@ -610,34 +610,131 @@
   margin-bottom: 8px;
   display: flex;
   align-items: center;
+/* ============ MASCOT & CHAT BUBBLE ============ */
+#mascot-wrap {
+  position: fixed;
+  bottom: -10px;
+  right: 18px;
+  z-index: 100;
+  display: none;
+  flex-direction: column;
+  align-items: flex-end;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+#mascot-wrap.visible {
+  display: flex;
+}
+
+#mascot-img {
+  width: 120px;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+  animation: mascot-bob 3s ease-in-out infinite;
+  transform-origin: 50% 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 0.18s ease;
+}
+#mascot-wrap:hover #mascot-img,
+#mascot-wrap:focus #mascot-img {
+  animation-play-state: paused;
+  transform: scale(1.05) rotate(-2deg);
+}
+
+@keyframes mascot-bob {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  30% { transform: translateY(-8px) rotate(1.5deg); }
+  60% { transform: translateY(-4px) rotate(-1deg); }
+}
+
+/* Rounded Chat Bubble */
+#mascot-bubble {
+  position: relative;
+  margin-bottom: 8px;
+  margin-right: 10px;
+  width: 220px;
+  background: #ffffff;
+  border: 2px solid #e2cfc4; /* Soft aesthetic border */
+  border-radius: 18px 18px 4px 18px; /* Classic speech bubble corner */
+  padding: 12px 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: scale(0.85) translateY(10px);
+  transform-origin: bottom right;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  pointer-events: none;
+}
+
+#mascot-wrap:hover #mascot-bubble,
+#mascot-wrap:focus #mascot-bubble,
+#mascot-wrap.bubble-open #mascot-bubble {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+/* Bubble Tail Pointing Down to Mascot */
+#mascot-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  right: 25px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #ffffff;
+}
+#mascot-bubble::before {
+  content: "";
+  position: absolute;
+  bottom: -13px;
+  right: 24px;
+  width: 0;
+  height: 0;
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 11px solid #e2cfc4;
+}
+
+.rx-header {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4a3b32;
+  border-bottom: 1px dashed #e2cfc4;
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
   gap: 6px;
 }
 .rx-line {
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: 11.5px;
   line-height: 1.6;
-  color: var(--text, #444444);
+  color: #555555;
   margin-bottom: 4px;
   display: flex;
   align-items: center;
   gap: 6px;
 }
+.rx-emoji {
+  font-size: 13px;
+}
 .rx-sig {
   margin-top: 8px;
   padding-top: 6px;
-  border-top: 1px dashed var(--line, #eeeeee);
-  font-size: 11px;
+  border-top: 1px dashed #e2cfc4;
+  font-size: 10.5px;
   font-weight: 600;
-  color: var(--text-dim, #777777);
+  color: #888888;
   text-align: right;
 }
 
 @media (max-width: 640px) {
-  #mascot-bubble {
-    width: 180px;
-    bottom: 98px;
-    right: 8px;
-  }
+  #mascot-img { width: 95px; }
+  #mascot-bubble { width: 190px; }
 }
 
   </style>
