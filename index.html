@@ -510,6 +510,132 @@
     50%{ height:11px; }
   }
 
+/* ============ MASCOT — Dr. Ko Ko ============ */
+#mascot-wrap {
+  position: fixed;
+  bottom: -10px;
+  right: 18px;
+  z-index: 10;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+#mascot-wrap.visible {
+  display: flex;
+}
+
+#mascot-img {
+  width: 130px;
+  filter: drop-shadow(0 8px 24px rgba(23, 24, 29, 0.28));
+  animation: mascot-bob 3s ease-in-out infinite;
+  transform-origin: 50% 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: transform 0.18s ease;
+}
+#mascot-wrap:hover #mascot-img,
+#mascot-wrap:focus #mascot-img {
+  animation-play-state: paused;
+  transform: scale(1.07) rotate(-3deg);
+}
+
+@keyframes mascot-bob {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  30% { transform: translateY(-10px) rotate(1.5deg); }
+  60% { transform: translateY(-5px) rotate(-1deg); }
+}
+
+/* speech bubble */
+#mascot-bubble {
+  position: absolute;
+  bottom: 118px;
+  right: 10px;
+  width: 188px;
+  background: #fff;
+  border: 1.5px solid var(--line);
+  border-radius: 14px 14px 4px 14px;
+  padding: 12px 14px;
+  box-shadow: 0 8px 28px rgba(23, 24, 29, 0.13);
+  opacity: 0;
+  transform: scale(0.85) translateY(6px);
+  transform-origin: bottom right;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  pointer-events: none;
+}
+#mascot-wrap:hover #mascot-bubble,
+#mascot-wrap:focus #mascot-bubble,
+#mascot-wrap.bubble-open #mascot-bubble {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+#mascot-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  right: 16px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 0 solid transparent;
+  border-top: 10px solid #fff;
+  filter: drop-shadow(0 2px 1px rgba(23, 24, 29, 0.08));
+}
+.rx-header {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.rx-header svg {
+  width: 11px;
+  height: 11px;
+  stroke: var(--accent);
+  fill: none;
+  flex-shrink: 0;
+}
+.rx-line {
+  font-family: "Fraunces", serif;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--text);
+  display: flex;
+  gap: 5px;
+}
+.rx-emoji {
+  flex-shrink: 0;
+  font-size: 12px;
+}
+.rx-sig {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--line);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+@media (max-width: 640px) {
+  #mascot-img { width: 100px; }
+  #mascot-bubble {
+    width: 168px;
+    bottom: 92px;
+    right: 4px;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -684,6 +810,48 @@
 <!-- falling black rose petals, only on the main page -->
 <div id="petal-layer"></div>
 
+<!-- ============= MASCOT — Dr. Ko Ko ============= -->
+    <!-- He bobs in the bottom-right corner on the main page.
+         Tap / hover him to see his birthday prescription. -->
+    <div
+      id="mascot-wrap"
+      role="button"
+      tabindex="0"
+      aria-label="Dr. Ko Ko's birthday prescription"
+    >
+      <!-- Speech bubble (appears on hover/tap) -->
+      <div id="mascot-bubble">
+        <div class="rx-header">
+          <svg viewBox="0 0 24 24" stroke-width="2">
+            <path
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Rx — Dr. Ko Ko, MD
+        </div>
+        <div class="rx-line">
+          <span class="rx-emoji">🎂</span> One full birthday. No skipping.
+        </div>
+        <div class="rx-line">
+          <span class="rx-emoji">💊</span> 1 year older, 10× cuter.
+        </div>
+        <div class="rx-line">
+          <span class="rx-emoji">🩺</span> Unlimited hugs &amp; kisses.
+        </div>
+        <div class="rx-line">
+          <span class="rx-emoji">⚠️</span> Side effect: being loved.
+        </div>
+        <div class="rx-sig">Prescribed with love 💛</div>
+      </div>
+
+      <img
+        id="mascot-img"
+        src="asset/image/mascot.png"
+        alt="Dr. Ko Ko the chipmunk mascot"
+      />
+    </div>
 
 <!-- quiet now-playing indicator, no controls -->
 <div id="music-indicator">
@@ -776,6 +944,8 @@
   const box = document.getElementById('giftBox');
   const landing = document.getElementById('landing');
   const main = document.getElementById('main');
+     
+  const mascotWrap = document.getElementById("mascot-wrap");
 
   function openGift(){
     if (box.classList.contains('blown')) return;
@@ -787,9 +957,28 @@
       landing.classList.add('hide');
       main.classList.add('show');
       startPetals();
+      // mascot slides in 1.2s after main page appears
+      setTimeout(() => mascotWrap.classList.add("visible"), 1200);
     }, 750);
   }
 
+  // tap on mobile toggles the mascot bubble open/closed
+  mascotWrap.addEventListener("click", () => {
+    mascotWrap.classList.toggle("bubble-open");
+});
+  mascotWrap.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      mascotWrap.classList.toggle("bubble-open");
+    }
+  });
+  // close bubble if user taps anywhere else on the screen
+  document.addEventListener("click", (e) => {
+    if (!mascotWrap.contains(e.target)) {
+      mascotWrap.classList.remove("bubble-open");
+    }
+  });
+     
   box.addEventListener('click', openGift);
   box.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openGift(); }
