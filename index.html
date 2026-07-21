@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- ╔══════════════════════════════════════════════════════════════╗
+     ║  BIRTHDAY PAGE — EDIT GUIDE                                  ║
+     ║                                                              ║
+     ║  1. NAME          — search for "Ko Ko" and replace           ║
+     ║  2. MESSAGE       — edit the <p> blocks inside .message-card ║
+     ║  3. SIGN-OFF      — edit the .signoff div                    ║
+     ║  4. TAGS          — edit the .tag-chip divs                  ║
+     ║  5. PHOTOS        — swap your-photo-1.jpg … your-photo-6.jpg ║
+     ║     (only edit the FIRST film-strip block; the second is a   ║
+     ║      hidden duplicate for the infinite scroll animation)      ║
+     ║  6. PHOTO CAPTIONS— edit the .frame-caption text             ║
+     ║  7. GALLERY TITLE — edit the <h2 class="gallery-title">      ║
+     ║  8. MUSIC         — replace music.mp3 with your audio file   ║
+     ║  9. COLORS        — change the :root variables in <style>    ║
+     ╚══════════════════════════════════════════════════════════════╝ -->
+
+<!-- EDIT 1 ▸ Page title shown in browser tab -->
+<title>Happy Birthday, Ko Ko</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fraunces:opsz,wght@9..144,300..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F8FCFF;
+    --bg-alt:#EBF3F7;
+    --text:#17181D;
+    --text-dim:#6D7679;
+    --accent:#17181D;   /* his colors: black on off-white — "panda" colorway */
+    --accent-soft:#D6E4EA;
+    --line:#D8E5EA;
+    --tag:#17181D;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html,body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Fraunces',serif;
+    overflow-x:hidden;
+    min-height:100%;
+  }
+
+  .mono{
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
+
+  .display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-optical-sizing:auto;
+    letter-spacing:0.01em;
+    line-height:0.95;
+  }
+
+  /* ---------- background motif icons ---------- */
+  .motif-layer{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+  }
+  .motif{
+    position:absolute;
+    opacity:0.05;
+    color:var(--text);
+    stroke:currentColor;
+  }
+
+  /* ================= LANDING PAGE ================= */
+  #landing{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:32px;
+    text-align:center;
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  #landing.hide{
+    opacity:0;
+    transform:scale(0.97);
+    pointer-events:none;
+    position:absolute;
+    inset:0;
+  }
+
+  .eyebrow{
+    font-size:12px;
+    color:var(--accent);
+    margin-bottom:18px;
+  }
+
+  .headline-small{
+    font-size:15px;
+    color:var(--text-dim);
+    margin-bottom:44px;
+    max-width:280px;
+  }
+
+  /* --- birthday cake --- */
+  .box-wrap{
+    position:relative;
+    width:230px;
+    cursor:pointer;
+    margin-bottom:28px;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  .cake-img{
+    display:block;
+    width:100%;
+    height:auto;
+    user-select:none;
+    -webkit-user-drag:none;
+    filter:drop-shadow(0 24px 40px rgba(23,24,29,0.22));
+  }
+
+  /* flame sits above the candle tip, positioned as a % of the image box */
+  .flame-wrap{
+    position:absolute;
+    top:15.8%;
+    left:49.85%;
+    width:22px;
+    height:34px;
+    transform:translate(-50%,-92%);
+    pointer-events:none;
+  }
+
+  .flame{
+    position:absolute;
+    left:50%;
+    bottom:0;
+    width:14px;
+    height:26px;
+    transform:translateX(-50%);
+    background:radial-gradient(circle at 50% 75%, #FFE49B 0%, #FFB13C 45%, #FF6A2B 78%, transparent 85%);
+    border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+    transform-origin:50% 100%;
+    animation:flicker 1.6s ease-in-out infinite;
+    opacity:1;
+  }
+
+  .flame::after{
+    content:'';
+    position:absolute;
+    left:50%;
+    bottom:2px;
+    width:5px;
+    height:11px;
+    transform:translateX(-50%);
+    background:radial-gradient(circle at 50% 70%, #FFF6DD, #FFDD8A 60%, transparent 80%);
+    border-radius:50%;
+  }
+
+  .flame-glow{
+    position:absolute;
+    top:-6px; left:50%;
+    width:60px; height:60px;
+    transform:translateX(-50%);
+    background:radial-gradient(circle, rgba(255,177,60,0.35), transparent 70%);
+    animation:glow-pulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes flicker{
+    0%,100%{ transform:translateX(-50%) rotate(-2deg) scaleY(1); }
+    20%{ transform:translateX(-50%) rotate(2deg) scaleY(0.94); }
+    40%{ transform:translateX(-48%) rotate(-3deg) scaleY(1.05); }
+    60%{ transform:translateX(-52%) rotate(3deg) scaleY(0.96); }
+    80%{ transform:translateX(-50%) rotate(-1deg) scaleY(1.02); }
+  }
+
+  @keyframes glow-pulse{
+    0%,100%{ opacity:0.7; }
+    50%{ opacity:1; }
+  }
+
+  /* blown-out state */
+  .box-wrap.blown .flame,
+  .box-wrap.blown .flame-glow{
+    animation:none;
+  }
+
+  .box-wrap.blown .flame{
+    opacity:0;
+    transform:translateX(-50%) scaleY(0.2);
+    transition:opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .box-wrap.blown .flame-glow{
+    opacity:0;
+    transition:opacity 0.35s ease;
+  }
+
+  .smoke{
+    position:absolute;
+    left:50%; bottom:22px;
+    width:6px; height:6px;
+    transform:translateX(-50%);
+    background:var(--text-dim);
+    border-radius:50%;
+    opacity:0;
+    pointer-events:none;
+  }
+
+  .box-wrap.blown .smoke{
+    animation:smoke-rise 1s ease-out forwards;
+  }
+
+  .box-wrap.blown .smoke:nth-child(2){ animation-delay:0.08s; }
+  .box-wrap.blown .smoke:nth-child(3){ animation-delay:0.16s; }
+
+  @keyframes smoke-rise{
+    0%{ opacity:0.5; transform:translate(-50%,0) scale(1); }
+    100%{ opacity:0; transform:translate(-30%,-46px) scale(2.4); }
+  }
+
+  .tap-hint{
+    font-size:11px;
+    color:var(--text-dim);
+    margin-top:14px;
+  }
+
+  /* ================= MAIN PAGE ================= */
+  #main{
+    position:relative;
+    min-height:100vh;
+    padding:80px 24px 140px;
+    display:none;
+    opacity:0;
+    transition:opacity 0.8s ease 0.2s;
+  }
+  #main.show{
+    display:block;
+    opacity:1;
+  }
+
+  .main-inner{
+    position:relative;
+    z-index:1;
+    max-width:640px;
+    margin:0 auto;
+  }
+
+  .tagline{
+    font-size:11px;
+    color:var(--accent);
+    text-align:center;
+    margin-bottom:20px;
+  }
+
+  .title{
+    font-size:clamp(38px,8.5vw,64px);
+    text-align:center;
+    margin-bottom:8px;
+  }
+
+  .title span{
+    color:var(--text);
+  }
+
+  .subtitle{
+    text-align:center;
+    color:var(--text-dim);
+    font-size:14px;
+    margin-bottom:56px;
+  }
+
+  .message-card{
+    background:var(--bg-alt);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:40px clamp(20px,5vw,52px);
+    position:relative;
+  }
+
+  .message-card::before{
+    content:'';
+    position:absolute;
+    top:0; left:28px;
+    width:40px; height:2px;
+    background:var(--accent);
+  }
+
+  .message-card p{
+    font-size:16px;
+    line-height:1.85;
+    color:var(--text);
+    margin-bottom:18px;
+  }
+
+  .message-card p:last-of-type{ margin-bottom:0; }
+
+  .signoff{
+    margin-top:28px;
+    font-size:14px;
+    color:var(--accent);
+    font-style:italic;
+  }
+
+  .editable-note{
+    margin-top:14px;
+    font-size:11px;
+    color:var(--text-dim);
+    border-top:1px dashed var(--line);
+    padding-top:12px;
+  }
+
+  /* stat / tag strip */
+  .tag-strip{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:48px;
+  }
+  .tag-chip{
+    border:1px solid var(--line);
+    border-radius:100px;
+    padding:8px 16px;
+    font-size:10px;
+    color:var(--text-dim);
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .tag-chip svg{ width:14px; height:14px; stroke:var(--accent); fill:none; }
+
+  /* ---------- film strip gallery ---------- */
+  .film-gallery-section{
+    padding:60px 0;
+    background-color:var(--bg);
+    text-align:center;
+    overflow:hidden;
+    margin-top:52px;
+  }
+
+  .gallery-title{
+    font-family:'JetBrains Mono',monospace;
+    font-size:1.2rem;
+    letter-spacing:3px;
+    color:var(--text);
+    margin-bottom:30px;
+    text-transform:uppercase;
+  }
+
+  .film-strip-container{
+    width:100%;
+    background-color:#0F1E36;
+    padding:25px 0;
+    position:relative;
+    border-top:12px dashed #ffffff;
+    border-bottom:12px dashed #ffffff;
+    box-shadow:0 10px 30px rgba(0,0,0,0.15);
+  }
+
+  .film-strip-track{
+    display:flex;
+    width:max-content;
+    animation:scrollFilm 35s linear infinite;
+  }
+
+  .film-strip-container:hover .film-strip-track{
+    animation-play-state:paused;
+  }
+
+  .film-strip{
+    display:flex;
+    gap:20px;
+    padding-right:20px;
+  }
+
+  .film-frame{
+    width:220px;
+    background-color:#000000;
+    padding:10px 10px 12px 10px;
+    border-radius:4px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.5);
+    transition:transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .film-frame:hover{
+    transform:scale(1.04);
+    box-shadow:0 8px 20px rgba(107,23,36,0.4);
+  }
+
+  .film-frame img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+    border-radius:2px;
+    display:block;
+  }
+
+  .frame-caption{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:monospace;
+    font-size:0.7rem;
+    color:#d1d5db;
+    margin-top:8px;
+    padding:0 2px;
+  }
+
+  .frame-num{
+    color:#6B1724;
+    font-weight:bold;
+  }
+
+  @keyframes scrollFilm{
+    0%{ transform:translateX(0); }
+    100%{ transform:translateX(-50%); }
+  }
+
+  /* corner-peek black rose — anchored to the viewport corner, partially cropped off-screen, stays put while scrolling the main page */
+  .rose-corner-peek{
+    position:fixed;
+    bottom:-34px;
+    left:-34px;
+    width:190px;
+    height:auto;
+    z-index:3;
+    pointer-events:none;
+    user-select:none;
+    -webkit-user-drag:none;
+    transform:rotate(-6deg);
+    filter:drop-shadow(0 14px 26px rgba(23,24,29,0.28));
+  }
+  @media (max-width:640px){
+    .rose-corner-peek{ width:130px; bottom:-24px; left:-24px; }
+  }
+
+  /* ---------- scroll-reveal fade-ins ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(22px);
+    transition:opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.in-view{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ---------- falling rose petals ---------- */
+  #petal-layer{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:2;
+  }
+  .petal{
+    position:absolute;
+    top:-40px;
+    width:10px;
+    height:14px;
+    background:linear-gradient(135deg,#2A2C33,#0E0F12);
+    border-radius:60% 40% 60% 40%/70% 60% 40% 30%;
+    opacity:0;
+    animation:petal-fall linear infinite;
+    filter:drop-shadow(0 4px 6px rgba(23,24,29,0.15));
+  }
+  @keyframes petal-fall{
+    0%{ transform:translate(0,0) rotate(0deg); opacity:0; }
+    8%{ opacity:0.55; }
+    92%{ opacity:0.5; }
+    100%{ transform:translate(var(--drift,40px), 108vh) rotate(340deg); opacity:0; }
+  }
+
+
+  /* music control */
+  /* small, quiet "now playing" indicator — no controls, just a signal music is on */
+  #music-indicator{
+    position:fixed;
+    bottom:24px;
+    right:24px;
+    z-index:5;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:var(--text-dim);
+    font-size:10px;
+    opacity:0;
+    transition:opacity 0.6s ease;
+    pointer-events:none;
+  }
+  #music-indicator.visible{ opacity:1; }
+  .eq-bar{
+    width:2px;
+    height:6px;
+    background:var(--text-dim);
+    border-radius:1px;
+    animation:eq 0.9s ease-in-out infinite;
+  }
+  .eq-bar:nth-child(2){ animation-delay:0.2s; }
+  .eq-bar:nth-child(3){ animation-delay:0.4s; }
+  @keyframes eq{
+    0%,100%{ height:4px; }
+    50%{ height:11px; }
+  }
+
+  </style>
+</head>
+<body>
+
+<!-- ============= LANDING PAGE ============= -->
+<div id="landing">
+  <div class="motif-layer" aria-hidden="true">
+    <!-- scattered sneaker/stethoscope line icons, decorative only -->
+    <svg class="motif" style="top:8%; left:6%; width:70px;" viewBox="0 0 64 64"><use href="#icon-sneaker"/></svg>
+    <svg class="motif" style="bottom:12%; right:8%; width:80px;" viewBox="0 0 64 64"><use href="#icon-stethoscope"/></svg>
+    <svg class="motif" style="top:60%; left:4%; width:50px;" viewBox="0 0 64 64"><use href="#icon-stethoscope"/></svg>
+    <svg class="motif" style="top:14%; right:10%; width:56px;" viewBox="0 0 64 64"><use href="#icon-sneaker"/></svg>
+    <svg class="motif" style="top:35%; left:15%; width:60px;" viewBox="0 0 64 64"><use href="#icon-dog"/></svg>
+    <svg class="motif" style="top:75%; right:15%; width:65px;" viewBox="0 0 64 64"><use href="#icon-squirrel"/></svg>
+    <svg class="motif" style="bottom:30%; left:20%; width:55px;" viewBox="0 0 64 64"><use href="#icon-avocado"/></svg>
+    <svg class="motif" style="top:25%; right:20%; width:60px;" viewBox="0 0 64 64"><use href="#icon-glasses"/></svg>
+  </div>
+
+  <!-- EDIT 2 ▸ Small label above the cake on the opening screen -->
+  <div class="eyebrow mono">Just A Small Thing For You</div>
+  <div class="box-wrap" id="giftBox" role="button" tabindex="0" aria-label="Blow out the candle">
+    <img class="cake-img" width="687" height="739" decoding="sync" src="cake.png" alt="Birthday cake">
+    <div class="flame-wrap">
+      <div class="flame-glow"></div>
+      <div class="flame"></div>
+      <div class="smoke"></div>
+      <div class="smoke"></div>
+      <div class="smoke"></div>
+    </div>
+  </div>
+  <!-- EDIT 3 ▸ Hint text below the cake -->
+  <div class="tap-hint mono" id="tapHint">tap the candle to blow it out</div>
+</div>
+
+<!-- ============= MAIN PAGE ============= -->
+<div id="main">
+  <img class="rose-corner-peek" width="297" height="283" decoding="async" src="rose.webp" alt="">
+  <div class="motif-layer" aria-hidden="true">
+    <svg class="motif" style="top:4%; left:2%; width:90px;" viewBox="0 0 64 64"><use href="#icon-sneaker"/></svg>
+    <svg class="motif" style="top:30%; right:0%; width:100px;" viewBox="0 0 64 64"><use href="#icon-stethoscope"/></svg>
+    <svg class="motif" style="bottom:10%; left:0%; width:80px;" viewBox="0 0 64 64"><use href="#icon-stethoscope"/></svg>
+    <svg class="motif" style="bottom:26%; right:4%; width:70px;" viewBox="0 0 64 64"><use href="#icon-sneaker"/></svg>
+    <svg class="motif" style="top:60%; left:12%; width:50px;" viewBox="0 0 64 64"><use href="#icon-sneaker"/></svg>
+    <svg class="motif" style="top:15%; left:20%; width:85px;" viewBox="0 0 64 64"><use href="#icon-car"/></svg>
+    <svg class="motif" style="bottom:40%; right:15%; width:90px;" viewBox="0 0 64 64"><use href="#icon-motorbike"/></svg>
+    <svg class="motif" style="top:45%; left:8%; width:60px;" viewBox="0 0 64 64"><use href="#icon-syringe"/></svg>
+    <svg class="motif" style="bottom:5%; right:20%; width:75px;" viewBox="0 0 64 64"><use href="#icon-controller"/></svg>
+  </div>
+
+  <div class="main-inner">
+    <!-- EDIT 4 ▸ Small tagline above the main heading -->
+    <div class="tagline mono">For the one who runs the ward and still finds time to run errands with me</div>
+
+    <!-- EDIT 5 ▸ Main heading — change "KO KO" to the recipient's name -->
+    <h1 class="title display">HAPPY <span>BIRTHDAY,</span><br>KO KO</h1>
+
+    <!-- EDIT 6 ▸ Subtitle below the heading -->
+    <p class="subtitle mono">Open. Read. Smile. Repeat.</p>
+
+    <!-- ╔═══════════════════════════════════════════════════════╗
+         ║  EDIT 7 ▸ BIRTHDAY MESSAGE                            ║
+         ║  Replace the <p> paragraphs below with your own words.║
+         ║  You can add or remove paragraphs freely.             ║
+         ╚═══════════════════════════════════════════════════════╝ -->
+    <div class="message-card">
+      <p class="reveal">I don't know how to make this day as good as you make every ordinary one, but I wanted to try.</p>
+      <p class="reveal">You're the kind of person who takes care of everyone else all day — steady hands, steady heart — and somehow still comes home with room left to take care of me too. I notice that. I don't say it enough, but I notice it every time.</p>
+      <p class="reveal">So today isn't about being extra put-together or perfect. It's just about you — the version of you that laughs too loud at bad jokes, that walks a little faster in new sneakers, that shows up even on the hardest days. That's the person I'm celebrating.</p>
+      <p class="reveal">Here's to another year of you being exactly who you are — and me getting to watch it happen up close.</p>
+
+      <!-- EDIT 8 ▸ Sign-off line at the bottom of the message -->
+      <div class="signoff reveal">Happy birthday, love. I'm so glad I get to be yours.</div>
+      <div class="editable-note mono">✏️ this message is a draft — edit freely before you send the link</div>
+    </div>
+
+    <!-- EDIT 9 ▸ Tag chips — small personality badges shown below the message.
+         Change the text after the </svg> tag (or after the last >) on each line.
+         You can remove an icon by deleting the <svg>...</svg> part entirely. -->
+    <div class="tag-strip">
+      <div class="tag-chip mono reveal"><svg viewBox="0 0 24 24"><use href="#icon-sneaker-sm"/></svg>Always in motion</div>
+      <div class="tag-chip mono reveal"><svg viewBox="0 0 24 24"><use href="#icon-stethoscope-sm"/></svg>Always taking care</div>
+      <div class="tag-chip mono reveal">Est. today</div>
+    </div>
+
+    <!-- ╔══════════════════════════════════════════════════════════════════╗
+         ║  EDIT 10 ▸ PHOTO GALLERY                                        ║
+         ║                                                                  ║
+         ║  HOW TO ADD YOUR PHOTOS:                                         ║
+         ║  a) Upload your image files to the same folder as index.html.    ║
+         ║  b) In the FIRST film-strip block below, set each                ║
+         ║     src="your-photo-1.jpg" to your actual filename,              ║
+         ║     e.g.  src="beach-trip.jpg"                                   ║
+         ║  c) Also update the caption text in each .frame-caption div.     ║
+         ║  d) DO NOT edit the SECOND film-strip block (it is marked        ║
+         ║     aria-hidden="true") — it's a hidden duplicate needed for     ║
+         ║     the seamless infinite scroll animation. It will auto-match   ║
+         ║     when you copy your changes to it at the very end.            ║
+         ╚══════════════════════════════════════════════════════════════════╝ -->
+    <section class="film-gallery-section reveal">
+      <!-- EDIT 10a ▸ Gallery section heading -->
+      <h2 class="gallery-title">OUR JOURNEY IN PICTURES</h2>
+      <div class="film-strip-container">
+        <div class="film-strip-track">
+
+          <!-- ▼▼▼ EDIT THIS BLOCK: your 6 photos + captions ▼▼▼ -->
+          <div class="film-strip">
+            <div class="film-frame">
+              <!-- EDIT: change src to your photo filename, e.g. src="photo1.jpg" -->
+              <img src="your-photo-1.jpg" alt="Memory 1">
+              <!-- EDIT: change caption text -->
+              <div class="frame-caption">SWEET MEMORIES <span class="frame-num">01 A</span></div>
+            </div>
+            <div class="film-frame">
+              <img src="your-photo-2.jpg" alt="Memory 2">
+              <div class="frame-caption">CHEERS TO YOU! <span class="frame-num">02 A</span></div>
+            </div>
+            <div class="film-frame">
+              <img src="your-photo-3.jpg" alt="Memory 3">
+              <div class="frame-caption">SURPRISE PARTY <span class="frame-num">03 A</span></div>
+            </div>
+            <div class="film-frame">
+              <img src="your-photo-4.jpg" alt="Memory 4">
+              <div class="frame-caption">SPECIAL DAY <span class="frame-num">04 A</span></div>
+            </div>
+            <div class="film-frame">
+              <img src="your-photo-5.jpg" alt="Memory 5">
+              <div class="frame-caption">BEST MOMENTS <span class="frame-num">05 A</span></div>
+            </div>
+            <div class="film-frame">
+              <img src="your-photo-6.jpg" alt="Memory 6">
+              <div class="frame-caption">FOREVER US <span class="frame-num">06 A</span></div>
+            </div>
+          </div>
+          <!-- ▲▲▲ END OF EDITABLE BLOCK ▲▲▲ -->
+
+          <!-- ⚠️  DUPLICATE — needed for the infinite scroll loop.
+               After editing the block above, copy all 6 film-frame divs here
+               to keep them in sync. DO NOT change aria-hidden="true". -->
+          <div class="film-strip" aria-hidden="true">
+            <div class="film-frame">
+              <img src="your-photo-1.jpg" alt="Memory 1">
+              <div class="frame-caption">SWEET MEMORIES <span class="frame-num">01 A</span></div>
+            </div>
+            <div class="film-frame">
+              <img src="your-photo-2.jpg" alt="Memory 2">
+              <div class="frame-caption">CHEERS TO YOU! <span class="frame-num">02 A</span></div>
+            </div>
+            <div class="film-frame">
+              <img src="your-photo-3.jpg" alt="Memory 3">
+              <div class="frame-caption">SURPRISE PARTY <span class="frame-num">03 A</span></div>
+            </div>
+            <div class="film-frame">
+              <img src="your-photo-4.jpg" alt="Memory 4">
+              <div class="frame-caption">SPECIAL DAY <span class="frame-num">04 A</span></div>
+            </div>
+            <div class="film-frame">
+              <img src="your-photo-5.jpg" alt="Memory 5">
+              <div class="frame-caption">BEST MOMENTS <span class="frame-num">05 A</span></div>
+            </div>
+            <div class="film-frame">
+              <img src="your-photo-6.jpg" alt="Memory 6">
+              <div class="frame-caption">FOREVER US <span class="frame-num">06 A</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- falling black rose petals, only on the main page -->
+<div id="petal-layer"></div>
+
+
+<!-- quiet now-playing indicator, no controls -->
+<div id="music-indicator">
+  <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+  <span class="mono">Now Playing</span>
+</div>
+
+<!-- EDIT 11 ▸ Background music
+     Replace music.mp3 with any .mp3 file you upload to the same folder.
+     The song plays automatically when the candle is blown out and loops. -->
+<audio id="bgm" loop preload="auto">
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- icon defs, reused everywhere via <use> -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <g id="icon-sneaker">
+      <path d="M4 40c0-4 3-6 8-8 6-2 10-6 14-11 2-3 5-4 8-3l14 5c4 1 6 4 6 8v6c0 3-2 5-5 5H9c-3 0-5-1-5-2z" fill="none" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M4 40h50" stroke-width="2"/>
+      <path d="M22 22c2 3 5 6 9 8" stroke-width="2" fill="none"/>
+      <path d="M30 21l3 4M35 20l3 4M40 21l3 4" stroke-width="2"/>
+    </g>
+    <g id="icon-stethoscope">
+      <path d="M18 8v14a10 10 0 0020 0V8" fill="none" stroke-width="2"/>
+      <circle cx="18" cy="6" r="2.4" stroke-width="2" fill="none"/>
+      <circle cx="38" cy="6" r="2.4" stroke-width="2" fill="none"/>
+      <path d="M28 32v8a10 10 0 1010-10" fill="none" stroke-width="2"/>
+      <circle cx="38.5" cy="40" r="4.5" stroke-width="2" fill="none"/>
+    </g>
+    <g id="icon-sneaker-sm">
+      <path d="M2 15c0-2 1-3 4-4 3-1 5-3 7-5 1-1 2-2 4-1l6 2c2 1 3 2 3 4v2c0 1-1 2-2 2H3c-1 0-1 0-1-0z"/>
+    </g>
+    <g id="icon-stethoscope-sm">
+      <path d="M7 3v6a5 5 0 0010 0V3"/>
+      <circle cx="17" cy="15" r="3"/>
+    </g>
+    <g id="icon-dog">
+      <circle cx="32" cy="32" r="16" fill="none" stroke-width="2"/>
+      <path d="M18 22c-6-4-10-2-8 6 2 6 8 6 10 2" fill="none" stroke-width="2"/>
+      <path d="M46 22c6-4 10-2 8 6-2 6-8 6-10 2" fill="none" stroke-width="2"/>
+      <ellipse cx="32" cy="38" rx="6" ry="4" fill="none" stroke-width="2"/>
+      <circle cx="26" cy="28" r="1.6"/>
+      <circle cx="38" cy="28" r="1.6"/>
+    </g>
+    <g id="icon-squirrel">
+      <path d="M16 46c0-10 6-16 14-16 6 0 10 4 10 9 0 4-3 7-7 7" fill="none" stroke-width="2"/>
+      <path d="M32 20c8-8 20-6 18 6-2 10-12 12-16 6" fill="none" stroke-width="2"/>
+      <circle cx="18" cy="38" r="1.6"/>
+      <path d="M12 46c2 2 5 2 7 0" stroke-width="2" fill="none"/>
+    </g>
+    <g id="icon-car">
+      <path d="M8 38c0-2 2-4 5-4l6-8c2-3 5-4 9-4h10c4 0 7 1 9 4l6 8c3 0 5 2 5 4v4c0 2-2 3-4 3h-2a5 5 0 01-10 0H24a5 5 0 01-10 0h-2c-2 0-4-1-4-3z" fill="none" stroke-width="2"/>
+      <path d="M19 26h26" stroke-width="2"/>
+    </g>
+    <g id="icon-motorbike">
+      <circle cx="16" cy="42" r="8" fill="none" stroke-width="2"/>
+      <circle cx="48" cy="42" r="8" fill="none" stroke-width="2"/>
+      <path d="M16 42l10-16h10l6 10h6" fill="none" stroke-width="2"/>
+      <path d="M26 26l8-6h6" fill="none" stroke-width="2"/>
+      <path d="M32 42h16" stroke-width="2"/>
+    </g>
+    <g id="icon-avocado">
+      <path d="M32 8c12 0 18 12 18 24s-8 24-18 24-18-12-18-24S20 8 32 8z" fill="none" stroke-width="2"/>
+      <circle cx="32" cy="34" r="9" fill="none" stroke-width="2"/>
+    </g>
+    <g id="icon-syringe">
+      <path d="M42 8l6 6-4 4" stroke-width="2" fill="none"/>
+      <path d="M44 10L20 34" stroke-width="2" fill="none"/>
+      <path d="M14 40l6 6-8 8-6-6z" stroke-width="2" fill="none"/>
+      <path d="M22 32l6 6" stroke-width="2"/>
+      <path d="M28 26l6 6" stroke-width="2"/>
+    </g>
+    <g id="icon-controller">
+      <path d="M14 28c0-4 3-6 7-6h22c4 0 7 2 7 6l3 14c1 4-2 7-6 6-3-1-4-3-6-6H23c-2 3-3 5-6 6-4 1-7-2-6-6z" fill="none" stroke-width="2"/>
+      <path d="M22 28v8M18 32h8" stroke-width="2"/>
+      <circle cx="42" cy="28" r="1.8"/>
+      <circle cx="46" cy="32" r="1.8"/>
+    </g>
+    <g id="icon-glasses">
+      <circle cx="18" cy="32" r="10" fill="none" stroke-width="2"/>
+      <circle cx="46" cy="32" r="10" fill="none" stroke-width="2"/>
+      <path d="M28 32h8" stroke-width="2"/>
+      <path d="M8 30l-4-2M56 30l4-2" stroke-width="2" fill="none"/>
+    </g>
+  </defs>
+</svg>
+
+<script>
+  const box = document.getElementById('giftBox');
+  const landing = document.getElementById('landing');
+  const main = document.getElementById('main');
+
+  function openGift(){
+    if (box.classList.contains('blown')) return;
+    box.classList.add('blown');
+    document.getElementById('tapHint').textContent = 'making a wish...';
+    bgm.play().catch(() => { /* file missing or blocked */ });
+    musicIndicator.classList.add('visible');
+    setTimeout(() => {
+      landing.classList.add('hide');
+      main.classList.add('show');
+      startPetals();
+    }, 750);
+  }
+
+  box.addEventListener('click', openGift);
+  box.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openGift(); }
+  });
+
+  // background music: starts the instant he opens the box, plays through both pages, no controls needed
+  const bgm = document.getElementById('bgm');
+  const musicIndicator = document.getElementById('music-indicator');
+
+  // ---------- scroll-reveal fade-ins ----------
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ---------- falling black rose petals (main page only) ----------
+  let petalsStarted = false;
+  function startPetals(){
+    if (petalsStarted) return;
+    petalsStarted = true;
+    const layer = document.getElementById('petal-layer');
+    const count = 9;
+    for (let i = 0; i < count; i++) {
+      const petal = document.createElement('div');
+      petal.className = 'petal';
+      const left = Math.random() * 100;
+      const duration = 9 + Math.random() * 7;
+      const delay = Math.random() * 10;
+      const drift = (Math.random() * 80 - 40) + 'px';
+      const size = 7 + Math.random() * 7;
+      petal.style.left = left + 'vw';
+      petal.style.width = size + 'px';
+      petal.style.height = (size * 1.35) + 'px';
+      petal.style.animationDuration = duration + 's';
+      petal.style.animationDelay = delay + 's';
+      petal.style.setProperty('--drift', drift);
+      layer.appendChild(petal);
+    }
+  }
+
+</script>
+
+</body>
+</html>
